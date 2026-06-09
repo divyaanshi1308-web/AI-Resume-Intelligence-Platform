@@ -18,12 +18,14 @@ async def upload_resume(file: UploadFile = File(...)):
     result = extract_text_from_pdf(pdf_bytes)
 
     return {
-    "filename": file.filename,
-    "email": result["email"],
-    "phone": result["phone"],
-    "linkedin": result["linkedin"],
-    "github": result["github"],
-    "pages": result["pages"],
-    "characters": result["characters"],
-    "preview": result["text"][:500]
-}
+        "filename": file.filename,
+        "name": result["name"],
+        "skills": result["skills"],
+        "email": result["email"],
+        "phone": result["phone"],
+        "linkedin": result["linkedin"],
+        "github": result["github"],
+        "pages": result["pages"],
+        "characters": result["characters"],
+        "preview": result["text"][:150]
+    }
