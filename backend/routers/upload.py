@@ -15,6 +15,9 @@ async def upload_resume(file: UploadFile = File(...)):
 
     pdf_bytes = await file.read()
 
+    with open("latest_resume.pdf", "wb") as f:
+        f.write(pdf_bytes)
+
     result = extract_text_from_pdf(pdf_bytes)
 
     return {
@@ -28,7 +31,6 @@ async def upload_resume(file: UploadFile = File(...)):
         "education": result["education"],
         "experience": result["experience"],
         "projects": result["projects"],
-        "sections": result["sections"],
         "ats_score": result["ats_score"],
         "pages": result["pages"],
         "characters": result["characters"],
