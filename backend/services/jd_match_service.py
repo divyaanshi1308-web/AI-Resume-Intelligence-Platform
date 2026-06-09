@@ -1,50 +1,40 @@
-import re
+from backend.data.skills import SKILLS
 
 
 def match_resume_to_jd(resume_skills, job_description):
 
-    jd_words = set(
-        re.findall(
-            r"[A-Za-z\+\#\.]+",
-            job_description
-        )
-    )
+    jd_skills = []
+
+    for skill in SKILLS:
+
+        if skill.lower() in job_description.lower():
+            jd_skills.append(skill)
 
     matched_skills = []
-    missing_skills = []
 
     for skill in resume_skills:
 
-        if skill.lower() in job_description.lower():
+        if skill in jd_skills:
             matched_skills.append(skill)
 
-    for word in jd_words:
+    missing_skills = []
 
-        if (
-            len(word) > 2
-            and word.lower()
-            not in [s.lower() for s in resume_skills]
-        ):
-            missing_skills.append(word)
+    for skill in jd_skills:
 
-    total_required = (
-        len(matched_skills)
-        + len(missing_skills)
-    )
+        if skill not in resume_skills:
+            missing_skills.append(skill)
 
-    if total_required == 0:
+    if len(jd_skills) == 0:
         match_score = 0
     else:
         match_score = round(
             len(matched_skills)
-            / total_required
+            / len(jd_skills)
             * 100
         )
 
     return {
         "match_score": match_score,
         "matched_skills": matched_skills,
-        "missing_skills": sorted(
-            list(set(missing_skills))
-        )[:15]
+        "missing_skills": missing_skills
     }

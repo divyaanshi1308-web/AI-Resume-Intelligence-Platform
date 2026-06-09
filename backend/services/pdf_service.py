@@ -186,15 +186,16 @@ def extract_text_from_pdf(pdf_bytes):
     github = github_match.group() if github_match else "Not Found"
 
     result_data = {
-    "name": name,
-    "email": email,
-    "phone": phone,
-    "linkedin": linkedin,
-    "github": github,
-    "skills": skills,
-    "education": education,
-    "experience": experience,
-    "projects": projects
+        "name": name,
+        "email": email,
+        "phone": phone,
+        "linkedin": linkedin,
+        "github": github,
+        "skills": skills,
+        "education": education,
+        "experience": experience,
+        "projects": projects,
+        "characters": len(text)
     }
 
     ats_score = calculate_ats_score(result_data)
