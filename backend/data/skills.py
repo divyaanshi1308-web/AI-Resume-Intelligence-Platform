@@ -2,7 +2,6 @@ SKILLS = [
     "Python",
     "Java",
     "C++",
-    "C",
     "HTML",
     "CSS",
     "JavaScript",

@@ -20,11 +20,16 @@ async def upload_resume(file: UploadFile = File(...)):
     return {
         "filename": file.filename,
         "name": result["name"],
-        "skills": result["skills"],
         "email": result["email"],
         "phone": result["phone"],
         "linkedin": result["linkedin"],
         "github": result["github"],
+        "skills": result["skills"],
+        "education": result["education"],
+        "experience": result["experience"],
+        "projects": result["projects"],
+        "sections": result["sections"],
+        "ats_score": result["ats_score"],
         "pages": result["pages"],
         "characters": result["characters"],
         "preview": result["text"][:150]
