@@ -168,7 +168,7 @@ function UploadSection({ uploadState, setUploadState, fileName, setFileName }) {
     );
 
     const response = await fetch(
-      "http://127.0.0.1:8000/upload",
+      "https://ai-resume-intelligence-platform-3d6o.onrender.com/upload",
       {
         method: "POST",
         body: formData,
@@ -446,7 +446,7 @@ function JDMatcher() {
     setMatchState('loading');
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/match", {
+      const response = await fetch("https://ai-resume-intelligence-platform-3d6o.onrender.com/match", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -526,17 +526,17 @@ function JDMatcher() {
                       <circle cx="36" cy="36" r="30" fill="none" stroke="var(--yellow-light)" strokeWidth="8"/>
                       <circle cx="36" cy="36" r="30" fill="none" stroke="var(--yellow)" strokeWidth="8"
                         strokeDasharray={`${2*Math.PI*30}`}
-                        strokeDashoffset={`${2*Math.PI*30*(1-0.72)}`}
+                        strokeDashoffset={`${2 * Math.PI * 30 * (1 - matchScore / 100)}`}
                         strokeLinecap="round"
                         transform="rotate(-90 36 36)"
                         style={{transition:'stroke-dashoffset 1.5s ease'}}
                       />
                     </svg>
-                    <div style={{position:'absolute',inset:0,display:'flex',alignItems:'center',justifyContent:'center',fontWeight:700,fontSize:'1rem',color:'var(--text)'}}>72%</div>
+                  <div style={{position:'absolute',inset:0,display:'flex',alignItems:'center',justifyContent:'center',fontWeight:700,fontSize:'1rem',color:'var(--text)'}}>{matchScore}%</div>
                   </div>
                   <div>
-                    <div className="match-info-title">Strong Match</div>
-                    <div className="match-info-desc">Your resume aligns well with this role. Addressing 3 missing skills could push your score above 85%.</div>
+                    <div className="match-info-title">Match Score</div>
+                    <div className="match-info-desc">Matched {matched.length} skills and found {missing.length} missing skills.</div>
                   </div>
                 </div>
                 <div className="match-detail-card">
