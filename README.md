@@ -1,10 +1,11 @@
 # AI Resume Intelligence Platform
 
+An AI-powered Resume Analysis and Job Description Matching platform that helps candidates evaluate resumes, improve ATS performance, identify missing skills, and measure compatibility with job descriptions.
+
+---
 Live Demo: https://ai-resume-intelligence-platform-ecru.vercel.app
 
 Backend API: https://ai-resume-intelligence-platform-3d6o.onrender.com/docs
-
-An AI-powered Resume Analysis and Job Description Matching platform that helps candidates evaluate resumes, improve ATS performance, identify missing skills, and measure compatibility with job descriptions.
 
 ---
 
@@ -230,19 +231,6 @@ Response:
   "missing_skills": []
 }
 ```
-
----
-
-## Future Improvements
-
-- AI Resume Rewriter
-- Resume Version Comparison
-- Authentication System
-- Resume Templates
-- Industry-Specific ATS Scoring
-- Interview Preparation Assistant
-- Resume Download Generator
-
 ---
 
 ## Author
@@ -260,5 +248,3 @@ https://linkedin.com/in/divyanshi-maheshwari13
 ## License
 
 This project is developed for learning, portfolio, and educational purposes.
-
-update and tell me how to push
