@@ -34,7 +34,7 @@ def match_resume_to_jd(resume_skills, job_description):
         )
 
     return {
-        "match_score": match_score,
-        "matched_skills": matched_skills,
-        "missing_skills": missing_skills
+    "match_percentage": match_score,
+    "matched_skills": matched_skills,
+    "missing_skills": missing_skills
     }
