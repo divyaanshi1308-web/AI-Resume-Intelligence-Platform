@@ -1,5 +1,9 @@
 # AI Resume Intelligence Platform
 
+Live Demo: https://ai-resume-intelligence-platform-ecru.vercel.app
+
+Backend API: https://ai-resume-intelligence-platform-3d6o.onrender.com/docs
+
 An AI-powered Resume Analysis and Job Description Matching platform that helps candidates evaluate resumes, improve ATS performance, identify missing skills, and measure compatibility with job descriptions.
 
 ---
@@ -77,6 +81,14 @@ An AI-powered Resume Analysis and Job Description Matching platform that helps c
 - Vercel (Frontend)
 - Render (Backend)
 
+Frontend:
+https://ai-resume-intelligence-platform-ecru.vercel.app
+
+Backend:
+https://ai-resume-intelligence-platform-3d6o.onrender.com
+
+API Documentation:
+https://ai-resume-intelligence-platform-3d6o.onrender.com/docs
 ---
 
 ## Project Structure
@@ -248,3 +260,5 @@ https://linkedin.com/in/divyanshi-maheshwari13
 ## License
 
 This project is developed for learning, portfolio, and educational purposes.
+
+update and tell me how to push
