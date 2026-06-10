@@ -153,12 +153,62 @@ function UploadSection({ uploadState, setUploadState, fileName, setFileName }) {
   const [dragging, setDragging] = useState(false);
   const fileRef = useRef();
 
-  const handleFile = (file) => {
-    if (!file) return;
-    setFileName(file.name);
-    setUploadState('loading');
-    setTimeout(() => setUploadState('success'), 2200);
-  };
+  const handleFile = async (file) => {
+  if (!file) return;
+
+  setFileName(file.name);
+  setUploadState("loading");
+
+  try {
+    const formData = new FormData();
+
+    formData.append(
+      "file",
+      file
+    );
+
+    const response = await fetch(
+      "http://127.0.0.1:8000/upload",
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(
+        "Upload failed"
+      );
+    }
+
+    const data =
+      await response.json();
+
+    console.log(
+      "Resume Data:",
+      data
+    );
+
+    window.resumeData =
+      data;
+
+    setUploadState(
+      "success"
+    );
+
+  } catch (error) {
+
+    console.error(error);
+
+    setUploadState(
+      "idle"
+    );
+
+    alert(
+      "Upload failed. Check backend."
+    );
+  }
+};
 
   return (
     <section className="section upload-section" id="upload">
@@ -220,33 +270,79 @@ function UploadSection({ uploadState, setUploadState, fileName, setFileName }) {
 }
 
 /* ---------- DASHBOARD ---------- */
-function Dashboard({ visible }) {
+function Dashboard({ visible, resumeData }) {
   const [scored, setScored] = useState(false);
   useEffect(() => { if (visible) setTimeout(() => setScored(true), 300); }, [visible]);
-
+  const atsScore = resumeData?.ats_score || 78;
   const strengths = [
     { label: 'Keyword Density', pct: 82, color: '#E8C76A' },
     { label: 'Format & Structure', pct: 91, color: '#C9B8EF' },
     { label: 'Action Verbs', pct: 75, color: '#EDAABB' },
     { label: 'Quantified Impact', pct: 58, color: '#8ECAAA' },
   ];
-  const foundSkills = ['React', 'TypeScript', 'Figma', 'UX Research', 'SQL', 'Agile', 'Prototyping'];
-  const missingSkills = ['AWS', 'Python', 'A/B Testing', 'Tableau'];
-  const suggestions = [
-    { icon: 'lightbulb', bg: '#FDF3D0', color: '#B8930A', text: <><strong>Add measurable outcomes</strong> to 3 of your experience bullets — recruiters respond to numbers like "increased retention by 24%."</> },
-    { icon: 'target', bg: '#F7E7EA', color: '#C0566A', text: <><strong>Include "A/B Testing"</strong> in your skills section — it appears in 68% of similar job postings in your target area.</> },
-    { icon: 'star', bg: '#EFE8F8', color: '#7C4DCC', text: <><strong>Strengthen your summary</strong> with role-specific keywords. Your current summary lacks the terms ATS systems prioritize most.</> },
+  const foundSkills = resumeData?.skills || [
+  'React',
+  'TypeScript',
+  'Figma',
+  'UX Research',
+  'SQL',
+  'Agile',
+  'Prototyping'
   ];
 
+  const missingSkills = resumeData?.missing_skills || [
+    'AWS',
+    'Python',
+    'A/B Testing',
+    'Tableau'
+  ];
+
+  const suggestions = resumeData?.suggestions || [
+    {
+      icon: 'lightbulb',
+      bg: '#FDF3D0',
+      color: '#B8930A',
+      text: (
+        <>
+          <strong>Add measurable outcomes</strong> to your experience
+          bullets to improve ATS performance.
+        </>
+      )
+    },
+    {
+      icon: 'target',
+      bg: '#F7E7EA',
+      color: '#C0566A',
+      text: (
+        <>
+          <strong>Add missing technical skills</strong> that commonly
+          appear in similar job descriptions.
+        </>
+      )
+    },
+    {
+      icon: 'star',
+      bg: '#EFE8F8',
+      color: '#7C4DCC',
+      text: (
+        <>
+          <strong>Strengthen your summary</strong> with role-specific
+          keywords and achievements.
+        </>
+      )
+    }
+  ];
   const circumference = 2 * Math.PI * 54; // r=54
-  const offset = circumference - (78 / 100) * circumference;
+  const offset =
+  circumference -
+  (atsScore / 100) * circumference;
 
   return (
     <section className="section dashboard-section" id="dashboard">
       <div className="section-inner">
         <div className="reveal">
-          <h2 className="section-title">ATS Dashboard</h2>
-          <p className="section-desc">Here's how your resume performs across the metrics that matter most.</p>
+          <h2 className="section-title">{resumeData?.name || "ATS Dashboard"}</h2>
+          <p className="section-desc">ATS analysis for your uploaded resume.</p>
         </div>
         <div className="dashboard-grid">
           <div className="dash-left">
@@ -268,7 +364,7 @@ function Dashboard({ visible }) {
                     />
                   </svg>
                   <div className="score-label">
-                    <span className="score-num">78</span>
+                    <span className="score-num">{atsScore}</span>
                     <span className="score-unit">out of 100</span>
                   </div>
                 </div>
@@ -338,14 +434,41 @@ function Dashboard({ visible }) {
 /* ---------- JD MATCHER ---------- */
 function JDMatcher() {
   const [jd, setJd] = useState('');
-  const [matchState, setMatchState] = useState('idle'); // idle | loading | done
-  const matched = ['React', 'TypeScript', 'UX Research', 'Figma', 'Agile'];
-  const missing = ['AWS', 'Python', 'Data Visualization'];
+  const [matchState, setMatchState] = useState('idle');
 
-  const handleMatch = () => {
+  const [matchScore, setMatchScore] = useState(0);
+  const [matched, setMatched] = useState([]);
+  const [missing, setMissing] = useState([]);
+
+  const handleMatch = async () => {
     if (!jd.trim()) return;
+
     setMatchState('loading');
-    setTimeout(() => setMatchState('done'), 2000);
+
+    try {
+      const response = await fetch("http://127.0.0.1:8000/match", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          job_description: jd,
+        }),
+      });
+
+      const data = await response.json();
+
+      setMatchScore(data.match_percentage || 0);
+      setMatched(data.matched_skills || []);
+      setMissing(data.missing_skills || []);
+
+      setMatchState("done");
+
+    } catch (err) {
+      console.error(err);
+      alert("JD matching failed.");
+      setMatchState("idle");
+    }
   };
 
   return (
@@ -514,7 +637,10 @@ function App() {
         fileName={fileName}
         setFileName={setFileName}
       />
-      <Dashboard visible={uploadState === 'success'} />
+      <Dashboard
+        visible={uploadState === 'success'}
+        resumeData={window.resumeData}
+      />
       <JDMatcher />
       <Footer />
     </div>
