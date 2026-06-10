@@ -458,7 +458,7 @@ function JDMatcher() {
 
       const data = await response.json();
 
-      setMatchPercentage(data.match_score || 0);
+      setMatchScore(data.match_score || 0);
       setMatched(data.matched_skills || []);
       setMissing(data.missing_skills || []);
 
